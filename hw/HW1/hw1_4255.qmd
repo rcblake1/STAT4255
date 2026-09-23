@@ -53,13 +53,16 @@ and the % change in the German market.
 
 (a) Compute the Euclidean distance between each observation and
 the test point, X1 = X2 = X3 =0.
+```{python}
+import math
+```
 
     - obs 1: sqrt(9) = 3
     - obs 2: sqrt(4) = 2
-    - obs 3: sqrt(10) = `{python} print(sqrt(10))`
-    - obs 4: sqrt(5) = `{python} print(sqrt(5))`
-    - obs 5: sqrt(2) = `{python} print(sqrt(2))`
-    - obs 6: sqrt(3) = `{python} print(sqrt(3))`
+    - obs 3: sqrt(10) = `{python} print(math.sqrt(10))`
+    - obs 4: sqrt(5) = `{python} print(math.sqrt(5))`
+    - obs 5: sqrt(2) = `{python} print(math.sqrt(2))`
+    - obs 6: sqrt(3) = `{python} print(math.sqrt(3))`
 
 (b) What is our prediction with K =1? Why?
 
@@ -69,4 +72,35 @@ the test point, X1 = X2 = X3 =0.
 
     - The three nearest neighbors are Green, Red, and Red. Since 2/3 (majority) are red, the prediction would be red.
 
+(d) If the Bayes decision boundary in this problem is highly nonlinear, then would we expect the best value for K to be large or small? Why?
+
+    - We would expect the best value for K to be small. This keeps the bias low and the flexibility/variance high, allowing for a highly nonlinear shape.
+
+# Question 8:
+
+(a)
+```{python}
+import pandas as pd
+
+college = pd.read_csv("College.csv")
+```
+
+(b)
+```{python}
+college
+```
+
+```{python}
+college2 = pd.read_csv('College.csv', index_col=0)
+college3 = college.rename({'Unnamed: 0': 'College'},
+axis=1)
+college3 = college3.set_index('College')
+```
+
+```{python}
+college = college3
+college
+```
+
+(c)
 

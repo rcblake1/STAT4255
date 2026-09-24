@@ -171,7 +171,8 @@ Boston = load_data("Boston")
 
 (b)
 ```{python}
-Boston.shape()
+Boston.head()
+Boston.shape
 ```
 
 The rows are towns and the columns are variables about each town.
@@ -179,7 +180,8 @@ The rows are towns and the columns are variables about each town.
 (c)
 
 ```{python}
-pd.plotting.scatter_matrix(Boston)
+pd.plotting.scatter_matrix(Boston, figsize=(12,12))
+plt.show()
 ```
 
 (d)
@@ -221,7 +223,12 @@ Boston.describe()
 
 ```{python}
 (Boston["rm"] > 7).sum()
-(Boston["rm"] > 8).sum()
+```
 
-(Boston["rm"] > 8).describe()
+```{python}
+(Boston["rm"] > 8).sum()
+```
+
+```{python}
+Boston[Boston['rm'] > 8].describe()
 ```

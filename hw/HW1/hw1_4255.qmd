@@ -81,6 +81,7 @@ import math
 (a)
 ```{python}
 import pandas as pd
+import matplotlib.pyplot as plt
 
 college = pd.read_csv("College.csv")
 ```
@@ -104,3 +105,123 @@ college
 
 (c)
 
+```{python}
+college.describe()
+```
+
+(d)
+
+```{python}
+pd.plotting.scatter_matrix(college[["Top10perc", "Apps", "Enroll"]])
+```
+
+(e)
+
+```{python}
+college.boxplot(column="Outstate", by="Private")
+```
+
+(f)
+
+```{python}
+# copied from the textbook
+college['Elite'] = pd.cut(college['Top10perc'],
+                            [0,0.5,1],
+                            labels=['No', 'Yes'])
+
+college["Elite"].value_counts()
+```
+
+```{python}
+college.boxplot(column="Outstate", by="Elite")
+```
+
+(g)
+
+```{python}
+fig, axes = plt.subplots(2,2)
+college['Enroll'].plot.hist(ax=axes[0, 0], bins=10, title='Apps (10 bins)', edgecolor='black')
+college['Outstate'].plot.hist(ax=axes[0, 1], bins=30, title='Apps (30 bins)', edgecolor='black')
+college['Outstate'].plot.hist(ax=axes[1, 0], bins=15, title='Outstate Tuition', edgecolor='black')
+college['Grad.Rate'].plot.hist(ax=axes[1, 1], bins=15, title='Graduation Rate', edgecolor='black')
+plt.show()
+```
+
+(h)
+
+Let's look further at what factors correlate with graduation rate:
+```{python}
+college.corr(numeric_only=True)['Grad.Rate']
+```
+
+Outstate, top10perc, top25perc, and perc.alumni have the largest positive correlation. Outstate sticks out to me as a little bit of a surprise, but I suppose students who travel out of state for college are probably wealthier and more committed to the school.
+
+S.F.Ratio and P.Undergrad have the largest negative impact. This makes sense, as schools with smaller student/faculty ratios graduate more students. Schools with higher levels of part time students are probably mostly state schools/community colleges, which most likely have a lower graduation rate.
+
+# Question 10:
+
+(a)
+```{python}
+import pandas as pd
+import matplotlib.pyplot as plt
+from ISLP import load_data
+
+Boston = load_data("Boston")
+```
+
+(b)
+```{python}
+Boston.shape()
+```
+
+The rows are towns and the columns are variables about each town.
+
+(c)
+
+```{python}
+pd.plotting.scatter_matrix(Boston)
+```
+
+(d)
+
+```{python}
+Boston.corr(numeric_only=True)['crim']
+```
+
+(e)
+
+```{python}
+for col in ["crim", "tax", "ptratio"]:
+    print(col, Boston[col].max(), Boston[col].max()-Boston[col].min())
+```
+
+(f)
+
+```{python}
+(Boston["chas"]==1).sum()
+```
+
+(g)
+
+```{python}
+Boston["ptratio"].median()
+```
+
+(h)
+
+```{python}
+Boston.loc[Boston["medv"].idxmin()]
+```
+
+```{python}
+Boston.describe()
+```
+
+(i)
+
+```{python}
+(Boston["rm"] > 7).sum()
+(Boston["rm"] > 8).sum()
+
+(Boston["rm"] > 8).describe()
+```

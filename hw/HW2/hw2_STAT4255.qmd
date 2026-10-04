@@ -1,0 +1,25 @@
+---
+title: "STAT4255 HW2"
+author: "Roger Blake"
+---
+
+# 3.3
+
+(a)
+
+(iii) is correct. The difference between college and high school graduates is 35-(10*GPA), so if the GPA is higher than 3.5, the high school graduates earn more on average.
+
+(b)
+
+```{python}
+50+(20*4)+(0.07*110)+(35*1)+(0.01*4*110)+(-10*4*1)
+```
+
+The predicted salary of a college graduate with an IQ of 110 and a GPA of 4.0 is $137,100.
+
+(c)
+
+False. We would need to know the p-value for the interaction term to make a claim like that. 
+
+# 3.4
+

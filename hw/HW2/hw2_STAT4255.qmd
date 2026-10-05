@@ -23,3 +23,203 @@ False. We would need to know the p-value for the interaction term to make a clai
 
 # 3.4
 
+(a) 
+
+The cubic regression would likely have a lower RSS for the training data because it is more flexible and would follow the training data more closely. This might not necessarily be good due to the dangers of overfitting.
+
+(b)
+
+The linear regression would likely have a lower RSS for the test data because it captures the overall trend better than the cubic regression. 
+
+(c)
+
+I would expect the training RSS for the cubic regression to be lower. It is more flexible and can overfit the data better than the linear (or might just be a better model).
+
+(d)
+
+There's not enough information to know which test RSS would be lower
+
+# 3.10
+
+(a)
+
+```{python}
+import pandas as pd
+import ISLP as islp
+import numpy as np
+import statsmodels.formula.api as smf
+import statsmodels.api as sm
+
+Carseats = islp.load_data("Carseats")
+
+mlr = smf.ols('Sales ~ Price + Urban + US', Carseats).fit()
+```
+
+(b)
+
+```{python}
+print(mlr.summary())
+```
+
+Price: -0.0545. Holding all other variables constant, a 1 unit increase in Price results in a 0.0545 unit decrease in carseat sales.
+
+Urban: -0.0219. Holding all other variables constant, if a store is in an urban area, the sales will decrease by 0.0219 units. 
+
+US: 1.2006. Holding all other variables constant, if a store is in the US, the sales will increase by 1.2006 units. 
+
+(c)
+
+Sales = 13.045 - 0.0545(Price) - 0.0219(Urban) + 1.2006(US)
+
+Urban and US are binary variables; Urban = 1 if the store is in an urban area and US = 1 if the store is in the US. 
+
+(d)
+
+We can reject the null hypothesis for US and Price, as they have a p-value of 0. We cannot reject the null hypothesis for Urban (p-value of 0.936).
+
+(e)
+
+```{python}
+mlr2 = smf.ols('Sales ~ Price + US', Carseats).fit()
+print(mlr2.summary())
+```
+
+(f)
+
+Neither of them fit the data very well. Both models have an R squared of 0.239, which means that 23.9% of the variance in sales is explained by the models. This is not very good.
+
+(g)
+
+Intercept:(11.790, 14.271)
+US: (0.692, 1.708)
+Price: (-0.065, -0.044)
+
+# 3.13
+
+(a)
+```{python}
+rng = np.random.default_rng(1)
+x = rng.normal(size=100)
+```
+
+(b)
+
+```{python}
+eps = rng.normal(0, 0.5, size=100) # std is 0.5 if variance is 0.25
+```
+
+(c)
+
+```{python}
+y = -1 + 0.5*x + eps
+len(y)
+```
+
+y has length 100. Beta naught has a value of -1 and Beta 1 has a value of 0.5.
+
+(d)
+
+```{python}
+import matplotlib.pyplot as plt
+fig,ax = plt.subplots()
+ax.scatter(x, y)
+ax.set(xlabel = "x", ylabel = "y")
+plt.show()
+```
+
+There is a general linear pattern; as x increases, y increases linearly. There is some noise to the data.
+
+(e)
+
+```{python}
+
+lm = sm.OLS(y, sm.add_constant(x)).fit()
+print(lm.summary())
+```
+
+The estimated values of beta naught (-1.0380) and beta 1 (0.4843) are very close to the true values (-1 and 0.5). The 95% CIs both contain the true values.
+
+(f)
+
+```{python}
+xs = np.linspace(x.min(), x.max(), 100)
+fig, ax = plt.subplots()
+ax.scatter(x, y, alpha=0.6)
+ax.plot(xs, lm.params[0] + lm.params[1] * xs, 'r', label='Model')
+ax.plot(xs, -1 + 0.5 * xs, 'g', label='Population')
+ax.set(xlabel='x', ylabel='y')
+ax.legend()
+plt.show()
+```
+
+(g) 
+
+```{python}
+Xq = sm.add_constant(np.column_stack([x, x**2]))
+qm = sm.OLS(y, Xq).fit()
+print(qm.summary())
+```
+
+The R squared stays at 0.409, and the quadratic term has a coefficient of roughly 0 with a p-value of 0.959. The quadratic term does not improve the model whatsoever.
+
+(h)
+
+```{python}
+rng = np.random.default_rng(1)
+x2 = rng.normal(size=100)
+eps2 = rng.normal(0, 0.1, size=100) # smaller std
+y2 = -1 + 0.5 * x2 + eps2
+
+fit2 = sm.OLS(y2, sm.add_constant(x2)).fit()
+print(fit2.summary())
+
+xs2 = np.linspace(x2.min(), x2.max(), 100)
+fig, ax = plt.subplots()
+ax.scatter(x2, y2, alpha=0.6)
+ax.plot(xs2, fit2.params[0] + fit2.params[1] * xs2, 'r', label='Least squares')
+ax.plot(xs2, -1 + 0.5 * xs2, 'g', label='Population')
+ax.set(xlabel='x', ylabel='y', title='Less noise')
+ax.legend()
+plt.show()
+```
+
+
+
+(i)
+
+```{python}
+rng = np.random.default_rng(1)
+x3 = rng.normal(size=100)
+eps3 = rng.normal(0, np.sqrt(1.5), size=100) # higher std
+y3 = -1 + 0.5 * x3 + eps3
+
+fit3 = sm.OLS(y3, sm.add_constant(x3)).fit()
+print(fit3.summary())
+
+xs3 = np.linspace(x3.min(), x3.max(), 100)
+fig, ax = plt.subplots()
+ax.scatter(x3, y3, alpha=0.6)
+ax.plot(xs3, fit3.params[0] + fit3.params[1] * xs3, 'r', label='Least squares')
+ax.plot(xs3, -1 + 0.5 * xs3, 'g', label='Population')
+ax.set(xlabel='x', ylabel='y', title='More noise')
+ax.legend()
+plt.show()
+```
+
+(j)
+
+Original data set:
+    - Beta naught: (-1.138, -0.938)
+    - Beta 1: (0.368, 0.601)
+
+Less noisy data set:
+    - Beta naught: (-1.028, -0.988)
+    - Beta 1: (0.474, 0.520)
+
+More noisy data set:
+    - Beta naught: (-1.337, -0.849)
+    - Beta 1: (0.176, 0.747)
+
+The data sets with more noise have wider confidence intervals, which makes sense because the standard error increases/decreases with the standard deviation. 
+
+# 3.15
